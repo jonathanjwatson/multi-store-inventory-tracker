@@ -4,6 +4,13 @@ const db = require("../models");
 
 router.get("/api/stores", (req, res) => {
   db.Store.find({})
+    .populate({
+      path: "products",
+      populate: {
+        path: "itemId",
+        model: "Item",
+      },
+    })
     .then((foundStores) => {
       res.json({
         error: false,

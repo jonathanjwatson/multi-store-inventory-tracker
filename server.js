@@ -19,7 +19,7 @@ mongoose
   })
   .catch((err) => {
     console.log("Mongoose failed to connect.");
-    console.logg(err);
+    console.log(err);
   });
 
 app.get("/api/config", (req, res) => {
@@ -27,6 +27,8 @@ app.get("/api/config", (req, res) => {
     success: true,
   });
 });
+
+app.use(express.static("public"));
 
 app.use(ItemController);
 app.use(StoreController);
