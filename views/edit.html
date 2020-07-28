@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <h1>This is my edit page.</h1>
+    <p style="color: green; display: none;" id="success-message"></p>
+    <p style="color: red; display: none;" id="error-message"></p>
+    <form id="edit-form"></form>
+    <script type="text/javascript">
+      $(document).ready(() => {
+        // $(window).load(function () {
+        //   // console.log("actually called this method");
+        //   var value = GetURLParameter("id");
+        //   alert(value);
+        // });
+        // function GetURLParameter(sParam) {
+        //   // console.log("called this function");
+        //   var sPageURL = window.location.search.substring(1);
+        //   var sURLVariables = sPageURL.split("&");
+        //   for (var i = 0; i < sURLVariables.length; i++) {
+        //     var sParameterName = sURLVariables[i].split("=");
+        //     if (sParameterName[0] == sParam) {
+        //       return sParameterName[1];
+        //     }
+        //   }
+        // }
+        $.ajax({
+          url: "/api/stores/5f1edd7ba43acf05c57fe067",
+          method: "GET",
+        }).then((response) => {
+          const formEl = $("#edit-form");
+          console.log(response.data);
+          const storeNameEl = $(
+            `<input type='text' id='name' value="${response.data.name}">`
+          );
+          formEl.append(storeNameEl);
+        });
+
+        $("#edit-form").on("submit", (event) => {
+          event.preventDefault();
+          const storeName = $("#name").val().trim();
+          if (storeName.length > 0) {
+            console.log($("#name").val());
+            $.ajax({
+              url: "/api/stores/5f1edd7ba43acf05c57fe067",
+              method: "PUT",
+              data: {
+                name: storeName,
+              },
+            })
+              .then((response) => {
+                console.log(response);
+                if (response.error) {
+                  $("#error-message").text(response.message).show();
+                } else {
+                  $("#success-message").text(response.message).show();
+                }
+                setTimeout(() => {
+                  window.location = "/";
+                }, 1500);
+              })
+              .fail((err) => {
+                console.log(err.responseJSON);
+                $("#error-message").text(err.responseJSON.message).show();
+              });
+          } else {
+            $("#error-message")
+              .text("Store name must be of valid length.")
+              .show();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

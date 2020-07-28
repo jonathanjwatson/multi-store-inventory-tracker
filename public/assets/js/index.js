@@ -7,7 +7,12 @@ $(document).ready(() => {
     console.log(response.data);
     const newDiv = $("div");
     for (let i = 0; i < response.data.length; i++) {
-      newDiv.append($("<h1>" + response.data[i].name + "</h1>"));
+      const h1El = $("<h1>" + response.data[i].name + "</h1>");
+      const editButtonEl = $(
+        `<a href="/edit/?id=${response.data[i]._id}"><button>Edit</button></a>`
+      );
+      newDiv.append(h1El);
+      newDiv.append(editButtonEl);
       for (let j = 0; j < response.data[i].products.length; j++) {
         newDiv.append(
           $("<p>Product: " + response.data[i].products[j].itemId.name + "</p>")
@@ -16,7 +21,11 @@ $(document).ready(() => {
           $("<p>UPC " + response.data[i].products[j].itemId.upc + "</p>")
         );
         newDiv.append(
-          $("<p>Current Stock: " + response.data[i].products[j].currentStock + "</p>")
+          $(
+            "<p>Current Stock: " +
+              response.data[i].products[j].currentStock +
+              "</p>"
+          )
         );
       }
     }
